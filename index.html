@@ -2,29 +2,35 @@
 <html>
 
 <head>
-  <title>Hangman Game</title>
+  <title>Hangman-Game</title>
   <link rel="stylesheet" type="text/css" href="assets/style.css">
   <script type="text/javascript" src="assets/game.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Orbitron:400,500,700,900" rel="stylesheet">
 </head>
 
 <body>
-  <!--<img src="assets/icon1024.png">-->
-  <!--<img src="assets/hangman.jpg">-->
-<div class="imadummy">
-  <h3>Choose a car manufacturer</h3>
+  <div class="imadummy">
     <div class="container">
-    <div class="row">
-        <h2>Guess the word:</h2>
-        <p id="right"></p>
-        <p>
-          <span id="remain">10</span> guesses remain
-        </p>
-        <p id="wrong"></p>
+      <header>
+        <h1>Hangman</h1>
+        <h3>Press a letter to begin.</h3>
+      </header>
+      <div id="score">
+        <div class="panel-body">
+          <ul class="list-inline">
+            <li><strong>Wins: </strong><span id="numWins"></span></li>
+            <li><strong>Losses: </strong><span id="numLosses"></span></li>
+            <li><strong>Guesses Left: </strong><span id="guessLeft"></span></li>
+          </ul>
+          <p><strong>Your Guesses so far: </strong><br><span id="incorrectGuesses"></span></p>
+        </div>
+      </div>
+      <div id="wordArea">
+        <div>
+          <span id="wordDisplay"></span>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
 </body>
-
-</html>

@@ -1,57 +1,89 @@
+
+var machineChoices = ['audi', 'bmw', 'porsche', 'volkswagen', 'jeep', 'lexus', 'maserati'];
+var validInputs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+var numWins = 0;
+var numLosses = 0;
+var guessLeft;
+var incorrectGuesses;
+var userGuess;
+var computerWord = '';
+var wordDisplay = '';
+var numWrong = 0;
+
 window.onload = function() {
-var words = ['audi', 'bmw', 'porsche', 'volkswagen', 'jeep'];
-var validInputs ='abcdefghijklmnopqrstuvwxyz'.split('');
-var game = {
-  guessed: [],
-  left: 10,
-  start: function() {
-    this.complete = false;
-    this.word = words[Math.floor(Math.random() * words.length)];
-    this.$right = document.getElementById('right');
-    this.$wrong = document.getElementById('wrong');
-    this.$remain = document.getElementById('remain');
-    this.$right.innerHTML = '_'.repeat(this.word.length);
-  },
-  guess: function(letter) {
-    if (this.left > 0 && this.complete != true) {
-      if (this.word.indexOf(letter) > -1 || this.guessed.indexOf(letter) > -1) {
-        this.right(letter);
-      } else {
-        this.wrong(letter);
-      }
-    }
-  },
-  right: function(letter) {
-    for (var i = 0; i < this.word.length; i++) {
-      if (this.word[i] == letter) {
-        var word = this.$right.innerHTML.split('');
-        word[i] = letter;
-        this.$right.innerHTML = word.join('');
-      }
-    }
-    if (this.$right.innerHTML.indexOf('_') < 0) {
-      alert('your head is still attached fool!');
-      this.complete = true;
-      alert('Porsche is the best.  no questions.');
-    }
-  },
-  wrong: function(letter) {
-    this.guessed.push(letter);
-    this.$wrong.innerHTML += ' ' + letter;
-    this.left--;
-    this.$remain.innerHTML = this.left;
-    if (this.left < 1) {
-      alert('Sucks to be you! It was ' + this.word);
-      this.complete = true;
-    }
+
+function setWordDashes() {
+  for (var i = 0; i < computerWord.length; i++)
+    wordDisplay.push('_');
+}
+
+function updateWordDisplay() {
+  for (var j = 0; j < computerWord.length; j++) {
+    if (computerWord[j] === userGuess)
+      wordDisplay[j] = computerWord[j];
   }
 }
-game.start();
-document.onkeyup = function(event) {
-  var letter = String.fromCharCode(event.keyCode).toLowerCase();
-  game.guess(letter);
-
-
+// Game reset
+function gameReset() {
+  computerWord = machineChoices[Math.floor(Math.random() * machineChoices.length)].toUpperCase();
+  guessLeft = 12;
+  incorrectGuesses = [];
+  userGuess = '';
+  wordDisplay = [];
+  setWordDashes();
+  numWrong = 0;
 }
 
+function gameOver() {
+  numLosses++;
+  setTimeout(function() {
+    alert("YOU LOST\nIt was actually\n" + computerWord.toUpperCase());
+  }, 0);
+  gameReset();
+}
+
+
+gameReset();
+document.querySelector('#numWins').innerHTML = "" + numWins;
+document.querySelector('#numLosses').innerHTML = "" + numLosses;
+document.querySelector('#guessLeft').innerHTML = "" + guessLeft;
+document.querySelector('#wordDisplay').innerHTML = wordDisplay.join(" ");
+
+
+document.onkeyup = function(event) {
+
+  userGuess = event.key.toUpperCase();
+
+  console.log(computerWord);
+  console.log(userGuess);
+
+  if (validInputs.indexOf(userGuess) === -1) {
+    alert('Invalid Input')
+  } else if ((wordDisplay.indexOf(userGuess) === -1) && (incorrectGuesses.indexOf(userGuess) === -1)) {
+    if (computerWord.indexOf(userGuess) > -1) {
+      updateWordDisplay();
+      if (wordDisplay.indexOf('_') === -1) {
+        numWins++;
+        alert("You nailed it!\n" + computerWord.toUpperCase() + "\nwas the answer");
+        gameReset();
+      }
+    } else {
+      guessLeft--;
+      if (guessLeft > 0) {
+        console.log(incorrectGuesses);
+        incorrectGuesses.push(userGuess);
+        numWrong++;
+        hang();
+      } else {
+        gameOver();
+      }
+    }
+  }
+
+  document.querySelector('#numWins').innerHTML = "" + numWins;
+  document.querySelector('#numLosses').innerHTML = "" + numLosses;
+  document.querySelector('#guessLeft').innerHTML = "" + guessLeft;
+  document.querySelector('#incorrectGuesses').innerHTML = incorrectGuesses.join(" ");
+  document.querySelector('#wordDisplay').innerHTML = wordDisplay.join(" ");
+};
 }
